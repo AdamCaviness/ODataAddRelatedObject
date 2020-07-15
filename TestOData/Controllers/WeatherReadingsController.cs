@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Microsoft.AspNet.OData;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using TestOData.DbContexts;
 using TestOData.Models;
 
@@ -21,9 +19,9 @@ namespace TestOData.Controllers
         }
 
         [EnableQuery]
-        public IQueryable<WeatherReading> Get()
+        public IHttpActionResult Get()
         {
-            return _dbContext.WeatherReadings;
+            return Ok(_dbContext.WeatherReadings);
         }
 
         [EnableQuery]
