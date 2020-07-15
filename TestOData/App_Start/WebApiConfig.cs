@@ -2,6 +2,7 @@
 // Licensed under the MIT License.  See License.txt in the project root for license information.
 
 using System.Web.Http;
+using Microsoft.AspNet.OData.Batch;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.OData.Edm;
@@ -18,7 +19,7 @@ namespace TestOData
 
 			var model = GetEdmModel();
 			config.Count().Filter().OrderBy().Expand().Select().MaxTop(null);
-			config.MapODataServiceRoute("odata", "odata", model);
+			config.MapODataServiceRoute("odata", "odata", model, new DefaultODataBatchHandler(GlobalConfiguration.DefaultServer));
 		}
 
 		private static IEdmModel GetEdmModel()
