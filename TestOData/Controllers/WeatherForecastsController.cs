@@ -13,9 +13,9 @@ namespace TestOData.Controllers
     {
         private ApiContext _dbContext;
 
-        public WeatherForecastsController(ApiContext context)
+        public WeatherForecastsController()
         {
-            _dbContext = context;
+            _dbContext = new ApiContext();
         }
 
         [EnableQuery]

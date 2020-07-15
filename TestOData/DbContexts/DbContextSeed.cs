@@ -11,7 +11,8 @@ namespace TestOData.DbContexts
         {
             var randomTime = new Random();
 			var randomTemp = new Random();
-			using (var context = new ApiContext(new DbContextOptions<ApiContext>()))
+            var contextOptions = new DbContextOptions<ApiContext>();
+            using (var context = new ApiContext(contextOptions))
             {
 				for (int i = 1; i < 6; i++)
                 {
