@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Web.Http.Controllers;
@@ -9,26 +8,29 @@ using Parser = Microsoft.OData.UriParser;
 
 namespace TestOData
 {
-	public class RelatedEntityRoutingConvention : IODataRoutingConvention
+	public class RelatedEntityRoutingConvention : NavigationSourceRoutingConvention
 	{
-		public string SelectController(ODataPath odataPath, HttpRequestMessage request)
+		private const string ActionName = "GetProperty";
+
+		public override string SelectController(ODataPath odataPath, HttpRequestMessage request)
 		{
 			if (odataPath.Segments.Any(s => s is UnresolvedPathSegment))
 				return string.Empty;
 
 			if (odataPath.PathTemplate.StartsWith("~/entityset/key/navigation"))
 			{
-				var parts = odataPath.ToString().Split('/');
-				var lastSegment = parts.Last();
-				if (lastSegment == "Readings")
-					return "WeatherReadings";					
+				var segment = odataPath.Segments[odataPath.Segments.Count - 1] as Parser.NavigationPropertySegment;
+				if (segment != null)
+					return segment.NavigationSource.Name;
 			}
 
 			return null;
 		}
-
-		public string SelectAction(ODataPath odataPath, HttpControllerContext controllerContext, ILookup<string, HttpActionDescriptor> actionMap)
+		public override string SelectAction(ODataPath odataPath, HttpControllerContext controllerContext, ILookup<string, HttpActionDescriptor> actionMap)
 		{
+			if (odataPath == null || controllerContext == null || actionMap == null)
+				return null;
+
 			// Web API OData 5.9.1 started calling parameterless GET() action when querying with composite key. https://github.com/OData/WebApi/issues/884
 			if (odataPath.PathTemplate == "~/entityset/key")
 			{
@@ -47,6 +49,17 @@ namespace TestOData
 
 				if (actionMap.Contains(actionName))
 					return actionName;
+			}
+
+			return null;
+		}
+
+		public static string FindMatchingAction(ILookup<string, HttpActionDescriptor> actionMap, params string[] targetActionNames)
+		{
+			foreach (string targetActionName in targetActionNames)
+			{
+				if (actionMap.Contains(targetActionName))
+					return targetActionName;
 			}
 
 			return null;
