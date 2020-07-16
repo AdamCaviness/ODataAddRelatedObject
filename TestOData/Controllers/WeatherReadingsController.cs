@@ -13,9 +13,9 @@ namespace TestOData.Controllers
     {
         private ApiContext _dbContext;
 
-        public WeatherReadingsController(ApiContext context)
+        public WeatherReadingsController()
         {
-            _dbContext = context;
+            _dbContext = new ApiContext();
         }
 
         [EnableQuery]
@@ -32,6 +32,19 @@ namespace TestOData.Controllers
         }
 
         public async Task<IHttpActionResult> Post(WeatherReading WeatherReading)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            _dbContext.WeatherReadings.Add(WeatherReading);
+
+            await _dbContext.SaveChangesAsync();
+
+            return Created(WeatherReading);
+        }
+        public async Task<IHttpActionResult> PostFromRelatedEntity(WeatherReading WeatherReading)
         {
             if (!ModelState.IsValid)
             {
