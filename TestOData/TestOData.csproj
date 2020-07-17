@@ -200,7 +200,6 @@
     <Compile Include="Controllers\WeatherReadingsController.cs" />
     <Compile Include="DbContexts\ApiContext.cs" />
     <Compile Include="DbContexts\DbContextSeed.cs" />
-    <Compile Include="Extensions\HttpRequestMessageExtensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
