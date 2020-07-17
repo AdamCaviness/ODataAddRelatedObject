@@ -10,8 +10,6 @@ namespace TestOData
 {
 	public class RelatedEntityRoutingConvention : NavigationSourceRoutingConvention
 	{
-		private const string ActionName = "GetProperty";
-
 		public override string SelectController(ODataPath odataPath, HttpRequestMessage request)
 		{
 			if (odataPath.Segments.Any(s => s is UnresolvedPathSegment))
@@ -49,17 +47,6 @@ namespace TestOData
 
 				if (actionMap.Contains(actionName))
 					return actionName;
-			}
-
-			return null;
-		}
-
-		public static string FindMatchingAction(ILookup<string, HttpActionDescriptor> actionMap, params string[] targetActionNames)
-		{
-			foreach (string targetActionName in targetActionNames)
-			{
-				if (actionMap.Contains(targetActionName))
-					return targetActionName;
 			}
 
 			return null;
